@@ -1,0 +1,25 @@
+# Angular / Node
+**/node_modules/
+**/dist/
+
+# Flutter / Dart
+**/.dart_tool/
+**/build/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+# Python
+**/.venv/
+**/__pycache__/
+*.py[cod]
+
+# Rust
+**/target/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
