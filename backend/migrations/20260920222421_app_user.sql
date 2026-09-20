@@ -1,0 +1,1 @@
+ALTER TABLE app_user ADD CONSTRAINT unique_normalized_name UNIQUE (normalized_name);
