@@ -1,8 +1,10 @@
 use argon2::{Argon2, PasswordHasher};
-use sqlx::PgPool;
 use uuid::Uuid;
 
-pub async fn register_admin(pool:&PgPool) -> String {
+pub async fn register_admin<'a, E>(executor: E) -> Result<String, sqlx::Error>
+where
+    E: sqlx::Executor<'a, Database = sqlx::Postgres>,
+{
     let argon = Argon2::default();
 
     let pass_hash = argon
@@ -24,20 +26,12 @@ pub async fn register_admin(pool:&PgPool) -> String {
     .bind(Uuid::new_v4().to_string())
     .bind("ADMIN")
     .bind(pass_hash)
-    .execute(pool)
-    .await;
+    .execute(executor)
+    .await?;
 
-    match result {
-        Ok(query_result) => {
-            if query_result.rows_affected() == 1 {
-                "Admin user is created".to_string()
-            } else {
-                "Admin already exists".to_string()
-            }
-        }
-
-        Err(e) => {
-            format!("Database error: {}", e)
-        }
+    if result.rows_affected() == 1 {
+        Ok("Admin user is created".to_string())
+    } else {
+        Ok("Admin already exists".to_string())
     }
 }

@@ -1,7 +1,7 @@
 use axum::{Router, routing::post};
 use backend::{
     api::{self},
-    db::postgres::create_pool,
+    db::db::create_pool,
     repository::register_admin::register_admin,
 };
 
@@ -15,7 +15,7 @@ async fn main() {
         .expect("Could not connect to PostgreSQL");
 
     let admin_creation_result = register_admin(&pool).await;
-    println!("{}", admin_creation_result);
+    println!("{:?}", admin_creation_result);
 
     let app = Router::new()
         .route("/auth/sign-in", post(api::auth::sign_in))
